@@ -22,8 +22,8 @@ class Struglifyer:
             if uf['esc']:
                 s = re.sub(r'(\\|")', r'\\\1', s)
 
-            s = re.sub(r'\\', r'\\\\', s)
-            s = re.sub(self.token, s, uf['uglifyer'])
+            format_dict = { 's': s }
+            s = uf['uglifyer'].format(**format_dict)
             print(s)
 
 
@@ -32,31 +32,31 @@ def parse_config(config_file):
         'token': '@x',
         'uglifyers': [
             {
-                'uglifyer': '"%s" % @x',
+                'uglifyer': '"%s" % {s}',
                 'esc': False
             },
             {
-                'uglifyer': '"{}".format(@x)',
+                'uglifyer': '"{{}}".format({s})',
                 'esc': False
             },
             {
-                'uglifyer': '@x[:]',
+                'uglifyer': '{s}[:]',
                 'esc': False
             },
             {
-                'uglifyer': '@x[::-1][::-1]',
+                'uglifyer': '{s}[::-1][::-1]',
                 'esc': False
             },
             {
-                'uglifyer': '"%%%s"%"s"%@x',
+                'uglifyer': '"%%%s"%"s"%{s}',
                 'esc': False
             },
             {
-                'uglifyer': '"".join(c for c in @x)',
+                'uglifyer': '"".join(c for c in {s})',
                 'esc': False
             },
             {
-                'uglifyer': 'eval("@x")',
+                'uglifyer': 'eval("{s}")',
                 'esc': True
             }
         ]
