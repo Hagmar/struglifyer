@@ -19,6 +19,10 @@ class Struglifyer:
 
         for _ in range(iters):
             uf = random.choice(self.uglifyers)
+            if uf['esc']:
+                s = re.sub(r'(\\|")', r'\\\1', s)
+
+            s = re.sub(r'\\', r'\\\\', s)
             s = re.sub(self.token, s, uf['uglifyer'])
             print(s)
 
@@ -51,12 +55,17 @@ def parse_config(config_file):
                 'uglifyer': '"".join(c for c in @x)',
                 'esc': False
             },
+            {
+                'uglifyer': 'eval("@x")',
+                'esc': True
+            }
         ]
     }
 
 
 def parse_args():
     parser = argparse.ArgumentParser()
+    parser.add_argument('-s', '--string', default='Hello, World!', help='The string')
     parser.add_argument('--config', help='Configuration file')
     parser.add_argument('--iters', type=int, default=1, help='Number of iterations')
 
@@ -66,7 +75,7 @@ def parse_args():
 def main():
     args = parse_args()
     su = Struglifyer(args)
-    su.run("Hello, World!", initial=True, iters=args.iters)
+    su.run(args.string, initial=True, iters=args.iters)
 
 
 if __name__ == '__main__':
