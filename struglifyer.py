@@ -23,6 +23,14 @@ class Struglifyer:
                 s = re.sub(r'(\\|")', r'\\\1', s)
 
             format_dict = {'s': s}
+
+            for requirement in uf.get('requires', []):
+                if requirement['type'] == str:
+                    value = ''.join(
+                            random.choice(string.ascii_letters)
+                            for _ in range(requirement['len']))
+                format_dict[requirement['name']] = value
+
             s = uf['uglifyer'].format(**format_dict)
             print(s)
 
@@ -39,6 +47,16 @@ def parse_config(config_file):
             {
                 'uglifyer': 'eval("{s}")',
                 'esc': True
+            },
+            {
+                'uglifyer': '"{{{x}}}".format(**{{"{x}":{s}}})',
+                'requires': [
+                    {
+                        'name': 'x',
+                        'type': str,
+                        'len': 1
+                    }
+                ]
             }
         ]
     }
