@@ -57,6 +57,16 @@ def parse_config(config_file):
                         'len': 1
                     }
                 ]
+            },
+            {
+                'uglifyer': '(lambda {x}: {x})({s})',
+                'requires': [
+                    {
+                        'name': 'x',
+                        'type': str,
+                        'len': 1
+                    }
+                ]
             }
         ]
     }
