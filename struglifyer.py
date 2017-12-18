@@ -11,6 +11,7 @@ import string
 class Struglifyer:
     def __init__(self, args):
         config = parse_config(args.config)
+        self.verbose = args.verbose
         self.uglifyers = config['uglifyers']
 
     def run(self, s, initial=False, iters=1):
@@ -18,6 +19,9 @@ class Struglifyer:
             s = '"{}"'.format(s)
 
         for _ in range(iters):
+            if self.verbose:
+                print(s)
+
             uf = random.choice(self.uglifyers)
             if uf.get('esc'):
                 s = re.sub(r'(\\|")', r'\\\1', s)
@@ -32,7 +36,7 @@ class Struglifyer:
                 format_dict[requirement['name']] = value
 
             s = uf['uglifyer'].format(**format_dict)
-            print(s)
+        print(s)
 
 
 def parse_config(config_file):
@@ -79,6 +83,8 @@ def parse_args():
     parser.add_argument('--config', help='Configuration file')
     parser.add_argument('--iters', type=int, default=1,
                         help='Number of iterations')
+    parser.add_argument('-v', '--verbose', action='store_true',
+                        help='Print string after each iteration')
 
     return parser.parse_args()
 
